@@ -2,7 +2,7 @@
 
 ## Run
 1. Install deps: `npm install`
-2. Make sure API server runs at `http://192.168.1.2:3000`
+2. Make sure API server runs at `http://192.168.1.7:3000`
 3. Start Expo: `npm run start`
 
 ## Features

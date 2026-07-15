@@ -17,6 +17,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.bayufrd.uasmobilemahasiswa",
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       }
@@ -26,10 +27,15 @@
       "expo-font"
     ],
     "extra": {
-      "apiBaseUrl": "https://l5x6nfnr-3000.asse.devtunnels.ms/api"
+      "apiBaseUrl": "http://192.168.1.7:3000/api",
+      "router": {},
+      "eas": {
+        "projectId": "fc941e74-745d-4c5d-9f3e-a9ee51aaa2b6"
+      }
     },
     "experiments": {
       "typedRoutes": false
-    }
+    },
+    "owner": "bayufrd"
   }
 }
