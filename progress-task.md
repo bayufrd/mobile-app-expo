@@ -253,6 +253,7 @@ Hasil validasi saat ini:
 - Aplikasi mobile masih mengarah ke `http://192.168.1.2:3000/api`, jadi device pengujian harus dapat mengakses host itu.
 - Dependency mobile masih memiliki advisory vulnerability dari upstream package, namun [`npx expo-doctor`](mobile-app/package.json) lulus.
 - Proses push ke remote git bergantung pada autentikasi git/GitHub yang tersedia pada environment pengguna.
+- Percobaan push pertama gagal karena branch aktif masih `master` saat perintah push diarahkan ke `main`.
 
 ## 15. Keputusan Penting
 - Dokumen [`progress-task.md`](progress-task.md) ditetapkan sebagai source of truth progres.
@@ -303,11 +304,11 @@ Hasil validasi saat ini:
 - Fokus berikutnya: install dependency, verifikasi koneksi DB, lalu uji alur end-to-end.
 
 ## 19. Langkah Berikutnya Paling Dekat
-1. Jalankan backend via `npm run dev` di [`backend`](backend).
-2. Jalankan Expo via `npm run start` di [`mobile-app`](mobile-app).
-3. Uji aplikasi mobile dari device/emulator pada jaringan yang bisa akses `192.168.1.2:3000`.
-4. Tambahkan uji eksplisit untuk validasi NIM duplikat, semester invalid, dan IPK invalid dari UI/API.
-5. Inisialisasi git, commit, lalu push ke remote `https://github.com/bayufrd/mobile-app-expo.git`.
+1. Perbaiki branch git lokal ke `main`, lalu ulangi push ke remote `https://github.com/bayufrd/mobile-app-expo.git`.
+2. Jalankan backend via `npm run dev` di [`backend`](backend).
+3. Jalankan Expo via `npm run start` di [`mobile-app`](mobile-app).
+4. Uji aplikasi mobile dari device/emulator pada jaringan yang bisa akses `192.168.1.2:3000`.
+5. Tambahkan uji eksplisit untuk validasi NIM duplikat, semester invalid, dan IPK invalid dari UI/API.
 
 ## 20. Log Progres
 ### 2026-07-15
@@ -328,3 +329,5 @@ Hasil validasi saat ini:
 - Menambahkan [`README.md`](README.md) root untuk setup proyek, struktur, verifikasi, dan workflow git.
 - Memperbarui [`.gitignore`](backend/.gitignore) dan [`.gitignore`](mobile-app/.gitignore) sesuai kebutuhan masing-masing app.
 - Menetapkan aturan dokumentasi bahwa setiap pekerjaan selesai wajib diikuti update status dan log pada [`progress-task.md`](progress-task.md).
+- Inisialisasi git lokal berhasil dan commit awal berhasil dibuat dengan pesan `feat: build Expo mobile app and MySQL REST API`.
+- Push pertama ke remote gagal karena branch `main` belum terbentuk saat perintah push dijalankan.
