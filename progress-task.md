@@ -233,7 +233,8 @@ Hasil validasi saat ini:
 - uji endpoint health, list, create, update, delete protection, dan delete sukses via API lokal
 - uji validasi API eksplisit berhasil untuk skenario NIM duplikat, semester invalid, dan IPK invalid
 - dependency [`mobile-app/package.json`](mobile-app/package.json) sudah di-install
-- [`npx expo-doctor`](mobile-app/package.json) lulus 17/17 checks setelah peer dependency dilengkapi
+- project Expo sudah disesuaikan ke SDK 54 pada [`mobile-app/package.json`](mobile-app/package.json)
+- [`npx expo-doctor`](mobile-app/package.json) lulus 18/18 checks pada SDK 54
 - uji runtime UI Expo di device/emulator belum dijalankan dari sesi ini
 
 ## 12. Dependensi Antartugas
@@ -255,6 +256,7 @@ Hasil validasi saat ini:
 - Dependency mobile masih memiliki advisory vulnerability dari upstream package, namun [`npx expo-doctor`](mobile-app/package.json) lulus.
 - Proses push ke remote git bergantung pada autentikasi git/GitHub yang tersedia pada environment pengguna.
 - Percobaan push pertama gagal karena branch aktif masih `master` saat perintah push diarahkan ke `main`.
+- Upgrade ke Expo SDK 54 memerlukan install dengan `--legacy-peer-deps` pada environment ini agar resolusi dependency selesai.
 
 ## 15. Keputusan Penting
 - Dokumen [`progress-task.md`](progress-task.md) ditetapkan sebagai source of truth progres.
@@ -291,7 +293,7 @@ Hasil validasi saat ini:
 | Audit workspace | Selesai | Hanya ditemukan [`UAS_H635C.md`](UAS_H635C.md) dan [`progress-task.md`](progress-task.md) |
 | Desain implementasi detail | Selesai | Arsitektur Expo + Express + MySQL sudah dipilih dan dipetakan |
 | Implementasi backend | Selesai | API utama, validasi, rule delete, schema, seed, dan env sudah berjalan |
-| Implementasi frontend | Selesai | Struktur Expo dan UI CRUD utama sudah dibuat dan dependency tervalidasi |
+| Implementasi frontend | Selesai | Struktur Expo, UI CRUD utama, dan kompatibilitas Expo SDK 54 sudah tervalidasi |
 | Pengujian | In progress | API sudah diuji termasuk validasi eksplisit, runtime UI Expo di device/emulator belum diuji |
 | Dokumentasi teknis final | In progress | Roadmap memuat alasan teknis, status implementasi, hasil validasi, dan log tambahan |
 
@@ -306,10 +308,10 @@ Hasil validasi saat ini:
 
 ## 19. Langkah Berikutnya Paling Dekat
 1. Jalankan backend via `npm run dev` di [`backend`](backend).
-2. Jalankan Expo via `npm run start` di [`mobile-app`](mobile-app).
+2. Jalankan Expo SDK 54 via `npm run start` di [`mobile-app`](mobile-app).
 3. Uji aplikasi mobile dari device/emulator pada jaringan yang bisa akses `192.168.1.2:3000`.
 4. Verifikasi dari UI bahwa error duplicate NIM, semester invalid, dan IPK invalid tampil informatif.
-5. Commit dan push update validasi terbaru setelah dokumentasi sinkron.
+5. Commit dan push update kompatibilitas Expo 54 setelah dokumentasi sinkron.
 
 ## 20. Log Progres
 ### 2026-07-15
@@ -334,3 +336,6 @@ Hasil validasi saat ini:
 - Push pertama ke remote gagal karena branch `main` belum terbentuk saat perintah push dijalankan.
 - Branch lokal berhasil dipindah ke `main`, lalu push ke remote berhasil.
 - Uji validasi API eksplisit berhasil: duplicate NIM mengembalikan pesan konflik, semester `15` ditolak, dan IPK `4.5` ditolak.
+- Project mobile berhasil disesuaikan ke Expo SDK 54 dengan dependency utama baru: [`expo`](mobile-app/package.json:14), [`expo-router`](mobile-app/package.json:18), [`react`](mobile-app/package.json:20), [`react-native`](mobile-app/package.json:21).
+- Install dependency SDK 54 berhasil via `npm install --legacy-peer-deps`.
+- Validasi Expo SDK 54 berhasil via `npx expo-doctor` dengan hasil 18/18 checks passed.
