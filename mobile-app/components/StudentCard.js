@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-export function StudentCard({ item, onEdit, onDelete }) {
+export function StudentCard({ item, onEdit, onDelete, onManageScores }) {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
@@ -15,6 +15,11 @@ export function StudentCard({ item, onEdit, onDelete }) {
       <Text style={styles.detail}>Program Studi: {item.studyProgram}</Text>
       <Text style={styles.detail}>Semester: {item.semester}</Text>
       <Text style={styles.detail}>IPK: {Number(item.gpa).toFixed(2)}</Text>
+      <View style={styles.actions}>
+        <Pressable style={[styles.button, styles.scoreButton]} onPress={() => onManageScores(item)}>
+          <Text style={styles.buttonText}>Kelola Nilai</Text>
+        </Pressable>
+      </View>
       <View style={styles.actions}>
         <Pressable style={[styles.button, styles.editButton]} onPress={() => onEdit(item)}>
           <Text style={styles.buttonText}>Edit</Text>
@@ -84,6 +89,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
+  },
+  scoreButton: {
+    backgroundColor: '#0f766e',
   },
   editButton: {
     backgroundColor: '#2563eb',

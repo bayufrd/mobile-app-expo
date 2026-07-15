@@ -1,6 +1,21 @@
 const { query } = require('../db/mysql');
 const { createHttpError } = require('../utils/httpError');
 
+const VALID_COURSES = [
+  'Pemrograman Mobile',
+  'Basis Data',
+  'Algoritma Lanjut',
+  'Manajemen Proyek TI',
+  'Jaringan Komputer',
+  'Analisis Sistem',
+  'Machine Learning Dasar',
+  'Kecerdasan Buatan',
+  'Pemrograman Web',
+  'Struktur Data',
+  'Sistem Operasi',
+  'Keamanan Informasi',
+];
+
 function normalizeStudentPayload(payload = {}) {
   return {
     nim: String(payload.nim || '').trim(),
@@ -32,6 +47,39 @@ function validateStudentPayload(payload, isUpdate = false) {
   return {
     ...data,
     gpa: Number(data.gpa.toFixed(2)),
+  };
+}
+
+function normalizeScorePayload(payload = {}) {
+  return {
+    courseName: String(payload.courseName || '').trim(),
+    score: Number(payload.score),
+  };
+}
+
+function validateScorePayload(payload) {
+  const data = normalizeScorePayload(payload);
+  const errors = {};
+
+  if (!data.courseName) {
+    errors.courseName = 'Mata kuliah wajib diisi';
+  }
+
+  if (data.courseName && !VALID_COURSES.includes(data.courseName)) {
+    errors.courseName = 'Mata kuliah tidak terdaftar pada pilihan yang tersedia';
+  }
+
+  if (Number.isNaN(data.score) || data.score < 0 || data.score > 100) {
+    errors.score = 'Nilai harus berada pada rentang 0 sampai 100';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    throw createHttpError(400, 'Validasi nilai akademik gagal', errors);
+  }
+
+  return {
+    ...data,
+    score: Number(data.score.toFixed(2)),
   };
 }
 
@@ -115,6 +163,50 @@ async function updateStudent(id, payload) {
   return getStudentById(id);
 }
 
+async function listAcademicScores(studentId) {
+  await getStudentById(studentId);
+
+  const rows = await query(
+    `SELECT id, student_id AS studentId, course_name AS courseName, score, created_at AS createdAt
+     FROM academic_scores
+     WHERE student_id = ?
+     ORDER BY created_at DESC, id DESC`,
+    [studentId]
+  );
+
+  return rows;
+}
+
+async function createAcademicScore(studentId, payload) {
+  await getStudentById(studentId);
+  const data = validateScorePayload(payload);
+
+  const duplicateRows = await query(
+    'SELECT id FROM academic_scores WHERE student_id = ? AND course_name = ? LIMIT 1',
+    [studentId, data.courseName]
+  );
+
+  if (duplicateRows.length > 0) {
+    throw createHttpError(409, 'Nilai untuk mata kuliah ini sudah ada pada mahasiswa tersebut');
+  }
+
+  const result = await query(
+    `INSERT INTO academic_scores (student_id, course_name, score)
+     VALUES (?, ?, ?)`,
+    [studentId, data.courseName, data.score]
+  );
+
+  const rows = await query(
+    `SELECT id, student_id AS studentId, course_name AS courseName, score, created_at AS createdAt
+     FROM academic_scores
+     WHERE id = ?
+     LIMIT 1`,
+    [result.insertId]
+  );
+
+  return rows[0];
+}
+
 async function deleteStudent(id) {
   await getStudentById(id);
 
@@ -131,9 +223,12 @@ async function deleteStudent(id) {
 }
 
 module.exports = {
+  VALID_COURSES,
   listStudents,
   createStudent,
   getStudentById,
   updateStudent,
+  listAcademicScores,
+  createAcademicScore,
   deleteStudent,
 };

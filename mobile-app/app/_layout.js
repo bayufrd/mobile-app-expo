@@ -18,6 +18,12 @@ export default function RootLayout() {
             title: 'Data Mahasiswa',
           }}
         />
+        <Stack.Screen
+          name="students/[id]/scores"
+          options={{
+            title: 'Nilai Akademik',
+          }}
+        />
       </Stack>
     </>
   );

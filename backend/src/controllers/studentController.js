@@ -42,6 +42,27 @@ async function updateStudent(req, res, next) {
   }
 }
 
+async function listAcademicScores(req, res, next) {
+  try {
+    const scores = await studentService.listAcademicScores(Number(req.params.id));
+    res.json({ data: scores });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function createAcademicScore(req, res, next) {
+  try {
+    const score = await studentService.createAcademicScore(Number(req.params.id), req.body);
+    res.status(201).json({
+      message: 'Nilai akademik berhasil ditambahkan',
+      data: score,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function deleteStudent(req, res, next) {
   try {
     await studentService.deleteStudent(Number(req.params.id));
@@ -58,5 +79,7 @@ module.exports = {
   getStudent,
   createStudent,
   updateStudent,
+  listAcademicScores,
+  createAcademicScore,
   deleteStudent,
 };

@@ -34,8 +34,19 @@ export function getStudents(search = '') {
   return request(`/students${query}`);
 }
 
+export function getStudentScores(id) {
+  return request(`/students/${id}/scores`);
+}
+
 export function createStudent(body) {
   return request('/students', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
+
+export function createStudentScore(id, body) {
+  return request(`/students/${id}/scores`, {
     method: 'POST',
     body: JSON.stringify(body),
   });

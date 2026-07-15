@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
@@ -123,6 +124,17 @@ export default function HomeScreen() {
     );
   }
 
+  function handleManageScores(student) {
+    router.push({
+      pathname: '/students/[id]/scores',
+      params: {
+        id: String(student.id),
+        name: student.name,
+        nim: student.nim,
+      },
+    });
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -156,7 +168,12 @@ export default function HomeScreen() {
             data={students}
             keyExtractor={(item) => String(item.id)}
             renderItem={({ item }) => (
-              <StudentCard item={item} onEdit={openEditModal} onDelete={handleDelete} />
+              <StudentCard
+                item={item}
+                onEdit={openEditModal}
+                onDelete={handleDelete}
+                onManageScores={handleManageScores}
+              />
             )}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={students.length === 0 ? styles.emptyListContent : styles.listContent}

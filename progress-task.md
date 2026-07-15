@@ -292,10 +292,10 @@ Hasil validasi saat ini:
 | Roadmap progres | Selesai | Dokumen ini dibuat sebagai acuan utama |
 | Audit workspace | Selesai | Hanya ditemukan [`UAS_H635C.md`](UAS_H635C.md) dan [`progress-task.md`](progress-task.md) |
 | Desain implementasi detail | Selesai | Arsitektur Expo + Express + MySQL sudah dipilih dan dipetakan |
-| Implementasi backend | Selesai | API utama, validasi, rule delete, schema, seed 30 data realistis, dan env sudah berjalan |
-| Implementasi frontend | Selesai | Struktur Expo, UI CRUD utama, kompatibilitas Expo SDK 54, dan base URL device/dev tunnel sudah disesuaikan |
-| Pengujian | In progress | API tunnel berhasil diakses, health check dan list 30 data lulus; uji alur UI end-to-end di device masih perlu |
-| Dokumentasi teknis final | In progress | Roadmap memuat alasan teknis, status implementasi, hasil validasi, dan log tambahan |
+| Implementasi backend | Selesai | API utama, validasi, rule delete, schema, seed 30 data realistis, env, dan endpoint nilai `GET/POST /api/students/:id/scores` sudah berjalan |
+| Implementasi frontend | Selesai | Struktur Expo, UI CRUD utama, kompatibilitas Expo SDK 54, base URL device/dev tunnel, tombol `Kelola Nilai`, layar riwayat nilai, dan form tambah nilai sudah disesuaikan |
+| Pengujian | In progress | Health check, list 30 data, dan endpoint nilai lokal lulus; uji alur UI end-to-end di device masih perlu |
+| Dokumentasi teknis final | In progress | Roadmap memuat alasan teknis, status implementasi, hasil validasi, dan log tambahan fitur nilai |
 
 ## 18. Konteks yang Harus Dipertahankan untuk Agent Berikutnya
 - Soal menuntut hasil berbasis React Native + REST API + MySQL, bukan sekadar analisis teoritis.
@@ -304,14 +304,14 @@ Hasil validasi saat ini:
 - Perubahan CRUD harus langsung terlihat tanpa restart aplikasi.
 - Rubrik menilai analisis, desain solusi, implementasi create, read, update, dan kualitas kode.
 - Codebase baru sudah dibuat langsung di workspace sesuai requirement soal.
-- Fokus berikutnya: verifikasi alur UI end-to-end di device dengan backend via dev tunnel.
+- Fokus berikutnya: verifikasi alur UI end-to-end di device untuk akses layar nilai, tambah nilai, refresh riwayat, dan proteksi hapus via backend/dev tunnel.
 
 ## 19. Langkah Berikutnya Paling Dekat
 1. Jalankan backend via `npm run dev` di [`backend`](backend).
 2. Jalankan Expo SDK 54 via `npm run start` di [`mobile-app`](mobile-app).
 3. Uji aplikasi mobile dari device/emulator memakai [`apiBaseUrl`](mobile-app/app.json:28) `https://l5x6nfnr-3000.asse.devtunnels.ms/api`.
-4. Verifikasi dari UI bahwa list tampil, create/update/delete berjalan, dan error duplicate NIM, semester invalid, serta IPK invalid tampil informatif.
-5. Commit dan push update seed database dan akses device setelah dokumentasi sinkron.
+4. Verifikasi dari UI bahwa tombol `Kelola Nilai` membuka layar [`students/[id]/scores`](mobile-app/app/students/[id]/scores.js), riwayat tampil, tambah nilai berhasil, dan list refresh tanpa restart.
+5. Commit dan push update fitur nilai setelah dokumentasi sinkron.
 
 ## 20. Log Progres
 ### 2026-07-15
@@ -347,3 +347,14 @@ Hasil validasi saat ini:
 - Import ulang [`backend/sql/schema.sql`](backend/sql/schema.sql) berhasil dengan hasil `30` mahasiswa dan `7` data nilai akademik.
 - Verifikasi backend via `https://l5x6nfnr-3000.asse.devtunnels.ms/health` berhasil `database: connected`.
 - Verifikasi list via `https://l5x6nfnr-3000.asse.devtunnels.ms/api/students` berhasil mengembalikan `30` data mahasiswa.
+- Audit terhadap [`UAS_H635C.md`](UAS_H635C.md) dan [`progress-task.md`](progress-task.md) menegaskan fitur nilai sebelumnya belum selesai di UI; saat itu baru ada proteksi hapus berbasis [`academic_scores`](backend/sql/schema.sql:18) tanpa tombol, menu, atau layar pengelolaan nilai.
+- Backend diperluas dengan daftar mata kuliah valid, normalisasi/validasi payload nilai, [`listAcademicScores()`](backend/src/services/studentService.js:166), dan [`createAcademicScore()`](backend/src/services/studentService.js:180).
+- Controller backend ditambah handler [`listAcademicScores()`](backend/src/controllers/studentController.js:45) dan [`createAcademicScore()`](backend/src/controllers/studentController.js:54).
+- Route backend ditambah endpoint `GET /api/students/:id/scores` dan `POST /api/students/:id/scores` di [`studentRoutes`](backend/src/routes/studentRoutes.js).
+- Service mobile ditambah [`getStudentScores()`](mobile-app/services/studentApi.js:37) dan [`createStudentScore()`](mobile-app/services/studentApi.js:48).
+- Kartu mahasiswa ditambah tombol [`Kelola Nilai`](mobile-app/components/StudentCard.js:19) agar fitur nilai terlihat langsung dari layar utama.
+- Halaman utama ditambah navigasi [`handleManageScores()`](mobile-app/app/index.js:127) menuju layar nilai per mahasiswa.
+- Router Expo ditambah screen [`students/[id]/scores`](mobile-app/app/_layout.js:22).
+- Layar baru [`StudentScoresScreen`](mobile-app/app/students/[id]/scores.js:134) dibuat untuk menampilkan riwayat nilai, refresh, error state, modal form, pilihan mata kuliah, dan submit tambah nilai.
+- Validasi syntax lulus untuk [`backend/src/server.js`](backend/src/server.js), [`mobile-app/app/index.js`](mobile-app/app/index.js), dan [`mobile-app/app/students/[id]/scores.js`](mobile-app/app/students/[id]/scores.js).
+- Verifikasi backend lokal lulus untuk alur `GET /api/students/:id/scores`, `POST /api/students/:id/scores`, lalu refresh list nilai setelah insert.
