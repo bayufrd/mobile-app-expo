@@ -235,7 +235,8 @@ Hasil validasi saat ini:
 - dependency [`mobile-app/package.json`](mobile-app/package.json) sudah di-install
 - project Expo sudah disesuaikan ke SDK 54 pada [`mobile-app/package.json`](mobile-app/package.json)
 - [`npx expo-doctor`](mobile-app/package.json) lulus 18/18 checks pada SDK 54
-- uji runtime UI Expo di device/emulator belum dijalankan dari sesi ini
+- runtime Expo berhasil dijalankan, namun sempat gagal bundling karena `babel-preset-expo` belum terpasang dengan versi SDK 54 yang sesuai
+- `babel-preset-expo@~54.0.10` sudah ditambahkan dan validasi akhir kembali lulus
 
 ## 12. Dependensi Antartugas
 - Analisis soal -> wajib sebelum desain solusi.
@@ -251,7 +252,6 @@ Hasil validasi saat ini:
 4. Dokumen ini menjadi sumber konteks utama lintas agent.
 
 ## 14. Kendala / Blocker Saat Ini
-- Runtime UI Expo pada device/emulator belum diuji langsung dari sesi ini.
 - Aplikasi mobile masih mengarah ke `http://192.168.1.2:3000/api`, jadi device pengujian harus dapat mengakses host itu.
 - Dependency mobile masih memiliki advisory vulnerability dari upstream package, namun [`npx expo-doctor`](mobile-app/package.json) lulus.
 - Proses push ke remote git bergantung pada autentikasi git/GitHub yang tersedia pada environment pengguna.
@@ -294,7 +294,7 @@ Hasil validasi saat ini:
 | Desain implementasi detail | Selesai | Arsitektur Expo + Express + MySQL sudah dipilih dan dipetakan |
 | Implementasi backend | Selesai | API utama, validasi, rule delete, schema, seed, dan env sudah berjalan |
 | Implementasi frontend | Selesai | Struktur Expo, UI CRUD utama, dan kompatibilitas Expo SDK 54 sudah tervalidasi |
-| Pengujian | In progress | API sudah diuji termasuk validasi eksplisit, runtime UI Expo di device/emulator belum diuji |
+| Pengujian | In progress | API sudah diuji, Expo SDK 54 tervalidasi, Metro sempat error lalu diperbaiki; uji alur UI end-to-end masih perlu |
 | Dokumentasi teknis final | In progress | Roadmap memuat alasan teknis, status implementasi, hasil validasi, dan log tambahan |
 
 ## 18. Konteks yang Harus Dipertahankan untuk Agent Berikutnya
@@ -339,3 +339,5 @@ Hasil validasi saat ini:
 - Project mobile berhasil disesuaikan ke Expo SDK 54 dengan dependency utama baru: [`expo`](mobile-app/package.json:14), [`expo-router`](mobile-app/package.json:18), [`react`](mobile-app/package.json:20), [`react-native`](mobile-app/package.json:21).
 - Install dependency SDK 54 berhasil via `npm install --legacy-peer-deps`.
 - Validasi Expo SDK 54 berhasil via `npx expo-doctor` dengan hasil 18/18 checks passed.
+- Saat `npx expo start` dijalankan, Metro sempat gagal karena `babel-preset-expo` tidak ditemukan.
+- Perbaikan dilakukan dengan menambahkan [`babel-preset-expo`](mobile-app/package.json:28) versi `~54.0.10`, lalu validasi Expo kembali lulus 18/18.
