@@ -231,6 +231,7 @@ Hasil validasi saat ini:
 - schema [`backend/sql/schema.sql`](backend/sql/schema.sql) berhasil di-import ke MySQL
 - cek syntax backend via [`node --check src/server.js`](backend/src/server.js:1) lulus
 - uji endpoint health, list, create, update, delete protection, dan delete sukses via API lokal
+- uji validasi API eksplisit berhasil untuk skenario NIM duplikat, semester invalid, dan IPK invalid
 - dependency [`mobile-app/package.json`](mobile-app/package.json) sudah di-install
 - [`npx expo-doctor`](mobile-app/package.json) lulus 17/17 checks setelah peer dependency dilengkapi
 - uji runtime UI Expo di device/emulator belum dijalankan dari sesi ini
@@ -279,7 +280,7 @@ Hasil validasi saat ini:
 - [x] Implementasi error handling informatif
 - [x] Uji alur create/read/update/delete
 - [x] Uji aturan bisnis delete protection
-- [ ] Uji validasi NIM/semester/IPK
+- [x] Uji validasi NIM/semester/IPK
 - [x] Dokumentasikan alasan teknis final
 
 ## 17. Status Detail per Bagian
@@ -291,7 +292,7 @@ Hasil validasi saat ini:
 | Desain implementasi detail | Selesai | Arsitektur Expo + Express + MySQL sudah dipilih dan dipetakan |
 | Implementasi backend | Selesai | API utama, validasi, rule delete, schema, seed, dan env sudah berjalan |
 | Implementasi frontend | Selesai | Struktur Expo dan UI CRUD utama sudah dibuat dan dependency tervalidasi |
-| Pengujian | In progress | API sudah diuji, runtime UI Expo di device/emulator belum diuji |
+| Pengujian | In progress | API sudah diuji termasuk validasi eksplisit, runtime UI Expo di device/emulator belum diuji |
 | Dokumentasi teknis final | In progress | Roadmap memuat alasan teknis, status implementasi, hasil validasi, dan log tambahan |
 
 ## 18. Konteks yang Harus Dipertahankan untuk Agent Berikutnya
@@ -304,11 +305,11 @@ Hasil validasi saat ini:
 - Fokus berikutnya: install dependency, verifikasi koneksi DB, lalu uji alur end-to-end.
 
 ## 19. Langkah Berikutnya Paling Dekat
-1. Perbaiki branch git lokal ke `main`, lalu ulangi push ke remote `https://github.com/bayufrd/mobile-app-expo.git`.
-2. Jalankan backend via `npm run dev` di [`backend`](backend).
-3. Jalankan Expo via `npm run start` di [`mobile-app`](mobile-app).
-4. Uji aplikasi mobile dari device/emulator pada jaringan yang bisa akses `192.168.1.2:3000`.
-5. Tambahkan uji eksplisit untuk validasi NIM duplikat, semester invalid, dan IPK invalid dari UI/API.
+1. Jalankan backend via `npm run dev` di [`backend`](backend).
+2. Jalankan Expo via `npm run start` di [`mobile-app`](mobile-app).
+3. Uji aplikasi mobile dari device/emulator pada jaringan yang bisa akses `192.168.1.2:3000`.
+4. Verifikasi dari UI bahwa error duplicate NIM, semester invalid, dan IPK invalid tampil informatif.
+5. Commit dan push update validasi terbaru setelah dokumentasi sinkron.
 
 ## 20. Log Progres
 ### 2026-07-15
@@ -331,3 +332,5 @@ Hasil validasi saat ini:
 - Menetapkan aturan dokumentasi bahwa setiap pekerjaan selesai wajib diikuti update status dan log pada [`progress-task.md`](progress-task.md).
 - Inisialisasi git lokal berhasil dan commit awal berhasil dibuat dengan pesan `feat: build Expo mobile app and MySQL REST API`.
 - Push pertama ke remote gagal karena branch `main` belum terbentuk saat perintah push dijalankan.
+- Branch lokal berhasil dipindah ke `main`, lalu push ke remote berhasil.
+- Uji validasi API eksplisit berhasil: duplicate NIM mengembalikan pesan konflik, semester `15` ditolak, dan IPK `4.5` ditolak.
