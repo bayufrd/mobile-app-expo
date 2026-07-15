@@ -1,16 +1,24 @@
 import { API_BASE_URL } from '../constants/api';
 
 async function request(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options.headers || {}),
+      },
+      ...options,
+    });
+  } catch (error) {
+    const networkError = new Error(`Gagal terhubung ke API: ${API_BASE_URL}`);
+    networkError.details = error.message || null;
+    throw networkError;
+  }
 
   const contentType = response.headers.get('content-type') || '';
-  const payload = contentType.includes('application/json') ? await response.json() : null;
+  const payload = contentType.includes('application/json') ? await response.json() : {};
 
   if (!response.ok) {
     const error = new Error(payload?.message || 'Permintaan gagal');

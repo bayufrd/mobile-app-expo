@@ -25,6 +25,9 @@
       "expo-router",
       "expo-font"
     ],
+    "extra": {
+      "apiBaseUrl": "https://l5x6nfnr-3000.asse.devtunnels.ms/api"
+    },
     "experiments": {
       "typedRoutes": false
     }

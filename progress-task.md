@@ -292,9 +292,9 @@ Hasil validasi saat ini:
 | Roadmap progres | Selesai | Dokumen ini dibuat sebagai acuan utama |
 | Audit workspace | Selesai | Hanya ditemukan [`UAS_H635C.md`](UAS_H635C.md) dan [`progress-task.md`](progress-task.md) |
 | Desain implementasi detail | Selesai | Arsitektur Expo + Express + MySQL sudah dipilih dan dipetakan |
-| Implementasi backend | Selesai | API utama, validasi, rule delete, schema, seed, dan env sudah berjalan |
-| Implementasi frontend | Selesai | Struktur Expo, UI CRUD utama, dan kompatibilitas Expo SDK 54 sudah tervalidasi |
-| Pengujian | In progress | API sudah diuji, Expo SDK 54 tervalidasi, Metro sempat error lalu diperbaiki; uji alur UI end-to-end masih perlu |
+| Implementasi backend | Selesai | API utama, validasi, rule delete, schema, seed 30 data realistis, dan env sudah berjalan |
+| Implementasi frontend | Selesai | Struktur Expo, UI CRUD utama, kompatibilitas Expo SDK 54, dan base URL device/dev tunnel sudah disesuaikan |
+| Pengujian | In progress | API tunnel berhasil diakses, health check dan list 30 data lulus; uji alur UI end-to-end di device masih perlu |
 | Dokumentasi teknis final | In progress | Roadmap memuat alasan teknis, status implementasi, hasil validasi, dan log tambahan |
 
 ## 18. Konteks yang Harus Dipertahankan untuk Agent Berikutnya
@@ -304,14 +304,14 @@ Hasil validasi saat ini:
 - Perubahan CRUD harus langsung terlihat tanpa restart aplikasi.
 - Rubrik menilai analisis, desain solusi, implementasi create, read, update, dan kualitas kode.
 - Codebase baru sudah dibuat langsung di workspace sesuai requirement soal.
-- Fokus berikutnya: install dependency, verifikasi koneksi DB, lalu uji alur end-to-end.
+- Fokus berikutnya: verifikasi alur UI end-to-end di device dengan backend via dev tunnel.
 
 ## 19. Langkah Berikutnya Paling Dekat
 1. Jalankan backend via `npm run dev` di [`backend`](backend).
 2. Jalankan Expo SDK 54 via `npm run start` di [`mobile-app`](mobile-app).
-3. Uji aplikasi mobile dari device/emulator pada jaringan yang bisa akses `192.168.1.2:3000`.
-4. Verifikasi dari UI bahwa error duplicate NIM, semester invalid, dan IPK invalid tampil informatif.
-5. Commit dan push update kompatibilitas Expo 54 setelah dokumentasi sinkron.
+3. Uji aplikasi mobile dari device/emulator memakai [`apiBaseUrl`](mobile-app/app.json:28) `https://l5x6nfnr-3000.asse.devtunnels.ms/api`.
+4. Verifikasi dari UI bahwa list tampil, create/update/delete berjalan, dan error duplicate NIM, semester invalid, serta IPK invalid tampil informatif.
+5. Commit dan push update seed database dan akses device setelah dokumentasi sinkron.
 
 ## 20. Log Progres
 ### 2026-07-15
@@ -340,4 +340,10 @@ Hasil validasi saat ini:
 - Install dependency SDK 54 berhasil via `npm install --legacy-peer-deps`.
 - Validasi Expo SDK 54 berhasil via `npx expo-doctor` dengan hasil 18/18 checks passed.
 - Saat `npx expo start` dijalankan, Metro sempat gagal karena `babel-preset-expo` tidak ditemukan.
-- Perbaikan dilakukan dengan menambahkan [`babel-preset-expo`](mobile-app/package.json:28) versi `~54.0.10`, lalu validasi Expo kembali lulus 18/18.
+- Perbaikan dilakukan dengan menambahkan [`babel-preset-expo`](mobile-app/package.json:26) versi `~54.0.10`, lalu validasi Expo kembali lulus 18/18.
+- Seed MySQL dirombak menjadi reset database penuh dengan 30 data mahasiswa realistis dan 7 data [`academic_scores`](backend/sql/schema.sql:18) untuk uji proteksi hapus dan QA API.
+- Konfigurasi [`API_BASE_URL`](mobile-app/constants/api.js:8) diubah agar default ke dev tunnel dan bisa dibaca dari [`extra.apiBaseUrl`](mobile-app/app.json:28) saat dibuka dari device.
+- Guard network/error di [`request()`](mobile-app/services/studentApi.js:3) diperketat agar kegagalan akses backend tidak lagi memunculkan error `Cannot read property 'data' of null`.
+- Import ulang [`backend/sql/schema.sql`](backend/sql/schema.sql) berhasil dengan hasil `30` mahasiswa dan `7` data nilai akademik.
+- Verifikasi backend via `https://l5x6nfnr-3000.asse.devtunnels.ms/health` berhasil `database: connected`.
+- Verifikasi list via `https://l5x6nfnr-3000.asse.devtunnels.ms/api/students` berhasil mengembalikan `30` data mahasiswa.
